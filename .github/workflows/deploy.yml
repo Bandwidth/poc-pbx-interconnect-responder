@@ -1,0 +1,64 @@
+#
+# Github Actions for Serverless Framework
+#
+# Create AWS_KEY and AWS_SECRET (& any other app specific) secrets in Github repository settings
+#
+# Note that you can modify GHA runner to run when there are specific tags (instead of just running 
+# on a specific branch). You could use something like
+#
+#   on:
+#     push:
+#       tags: # Deploy tag (e.g. v1.0) to production
+#         - 'v**'
+#
+# This would kick off a GHA runner whenever a push contains a tag like 'v1.0', for example
+# This way, you can defined multiple GHA on the same branch doing different things (i.e. 
+# deploy to prod or dev based on information on the git commit)
+#
+
+
+name: Deploy STAGE
+on:
+  push:
+    branches:
+      - YOUR_BRANCH
+jobs:
+  deploy-stage:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Setup node with specific version we have tested
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14.16.1'
+    - name: Install NPM dependencies
+      run: npm install
+    - name: Install Serverless Framework
+      run: npm install -g serverless
+    - name: Serverless AWS authentication
+      run: sls config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
+    # DO NOT remove the following step of env file creation
+    # under ui/ even if you don't need one for your app;
+    # it is intended for webpack to ignore version mismatch b/w 
+    # serverless and react project
+    - name: Create env file
+      run: |
+        touch ui/.env
+        echo SKIP_PREFLIGHT_CHECK=true >> ui/.env
+    - name: Create env file for Lambda
+      run: |
+        # Environment variables required for your API
+        # should be defined here
+        # Use Github secrets for sensitive information
+        touch .env
+        echo YOUR_ENV_PARAM=YOUR_ENV_PARAM_VAL >> .env
+    - name: Deploy Lambda functions
+      run: sls deploy --stage STAGE
+    - name: Build React project
+      run: |
+        cd ui
+        npm install
+        npm run build
+    - name: Deploy build/ to S3
+      run: sls client deploy --no-confirm --stage STAGE
