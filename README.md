@@ -4,8 +4,6 @@ This document describes configuring interop between a PBX and Bandwidth's Progra
 
 ![configuration](configuration.png)
 
-For detailed instructions, please refer to the [documentation](https://www.serverless.com/framework/docs/providers/aws/).
-
 ## Step 1 - Application Configuration
 
 - **Create an application in Bandwidth Dashboard**
