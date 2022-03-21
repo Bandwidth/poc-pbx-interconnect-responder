@@ -53,6 +53,22 @@ _NOTE: All PBX software should support trunking, outbound routes, and extensions
 
 At this point you should be able to place a call from a device registered to your PBX that is using the outbound route configured in step 3.2 and get callbacks sent to your application on the URLs you provided during Step 1.  The webhooks are described in detail [here](https://dev.bandwidth.com/docs/voice/webhooks)
 
+You can also place a programmatic call to the device registered to your PBX.  To do this, initial a call using the calls API:
+
+``` https://voice.bandwidth.com/api/v2/accounts/<Your Account ID>/calls ```
+
+With a request body like this:
+
+```
+{
+"from": "<Your From Number>",
+"to": "sip:user@domain",
+"callTimeout": 6,
+"answerUrl": "<Your Application Url>",
+"applicationId": "<Your Application Id>"
+}
+```
+
 ## Troubleshooting
 * If you are not getting callbacks, check your PBX log files to make sure the trunk is reachable.
 * Make sure CIDs and formatting are set appropriately.

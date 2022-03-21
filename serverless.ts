@@ -2,8 +2,8 @@ import type { AWS } from '@serverless/typescript';
 
 import hello from '@functions/hello';
 
-const BUCKET_NAME = "YOUR_BUCKET_NAME";
-const LAMBDA_SERVICE_NAME = "YOUR_LAMBDA_SERVICE_NAME";
+const BUCKET_NAME = "POC_PBX_INTERCONNECT";
+const LAMBDA_SERVICE_NAME = "poc_sip_responder";
 
 const serverlessConfiguration: AWS = {
   // Name of your lambda service

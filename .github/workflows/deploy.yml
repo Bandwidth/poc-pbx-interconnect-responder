@@ -17,11 +17,11 @@
 #
 
 
-name: Deploy STAGE
+name: Deploy poc
 on:
   push:
     branches:
-      - YOUR_BRANCH
+      - master
 jobs:
   deploy-stage:
     runs-on: ubuntu-latest
@@ -54,11 +54,11 @@ jobs:
         touch .env
         echo YOUR_ENV_PARAM=YOUR_ENV_PARAM_VAL >> .env
     - name: Deploy Lambda functions
-      run: sls deploy --stage STAGE
+      run: sls deploy --stage poc
     - name: Build React project
       run: |
         cd ui
         npm install
         npm run build
     - name: Deploy build/ to S3
-      run: sls client deploy --no-confirm --stage STAGE
+      run: sls client deploy --no-confirm --stage poc
